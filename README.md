@@ -42,7 +42,8 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 
 ```bash
 LittleLemonApp/
-├── App.js                 # Main entry point
+├── App.js                # Main entry point
+├── README.md             # Project documentation
 └── src
   ├── animations/         # Splash Animation    
   ├── components/         # Reusable UI components
@@ -53,5 +54,4 @@ LittleLemonApp/
   ├── navigation/         # Navigation stack config
   ├── screens/            # App screens (Home, Menu, Profile, etc.)
   ├── storage/            # Common place to store the files regarding React Native Storage
-  ├── utils/              # Single file for Validations
-  └── README.md           # Project documentation
+  └── utils/              # Single file for Validation.
