@@ -1,0 +1,132 @@
+import { StyleSheet, View, Image, Text, Pressable } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useEffect, useState, useContext } from "react";
+import { dynamicWidth } from "../constants/metrics";
+import { retrieveData } from "../storage/storage";
+import { UserContext } from "../context/UserContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+// Common component for Header of the app.
+const HeaderWithProfile = () => {
+  const [userInitials, setuserInitials] = useState("");
+  const { user, setUser } = useContext(UserContext);
+  const [image, setImage] = useState("");
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  useEffect(() => {
+    async function fetchPersonalData() {
+      const personalData = await retrieveData("Personal_Details");
+      const parsedPersonalData = JSON.parse(personalData);
+      setuserInitials(
+        parsedPersonalData.firstName[0] + parsedPersonalData.lastName[0]
+      );
+      setUser(parsedPersonalData);
+      console.log("Personal data:", personalData);
+    }
+    fetchPersonalData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated initials:", userInitials);
+    console.log("Context Variable:", user);
+  }, [userInitials]);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const navigateToProfileScreen = () => {
+    if (route.name != "Profile") {
+      console.log("Navigation State :: " + JSON.stringify(route.name));
+      navigation.navigate("Profile");
+    }else if(route.name == "Profile"){
+      pickImage();
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.backView}>
+        {route.name !== "Home" && (
+        <Pressable
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Image style={styles.image} source={require("../image/back.png")} />
+        </Pressable>
+      )}
+      </View>
+      <Image style={styles.headerImg} source={require("../image/logo.png")} />
+      <Pressable style={styles.profileView} onPress={navigateToProfileScreen}>
+        {image ? (
+          <Image source={{ uri: image }} style={styles.profileImage} />
+        ) : (
+          <Text style={styles.textInitials}>{userInitials}</Text>
+        )}
+      </Pressable>
+    </View>
+  );
+};
+
+export default HeaderWithProfile;
+
+const styles = StyleSheet.create({
+  container: {
+    height: 70,
+    width: dynamicWidth(1),
+    flexDirection: "row",
+    backgroundColor: "#DEE2EB",
+  },
+  headerImg: {
+    height: 70,
+    width: dynamicWidth(0.70),
+    resizeMode: "contain",
+    padding: 10,
+    backgroundColor: "#DEE2EB",
+  },
+  backView: {
+    height: 40,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: 'center',
+  },
+  profileView: {
+    height: 50,
+    width: 50,
+    borderRadius: 40,
+    backgroundColor: "#FFFFFF",
+    marginLeft: 15,
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: 50,
+    height: 50,
+    padding: 5,
+    marginLeft: 2
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 50
+  },
+  textInitials: {
+    fontSize: 25,
+  },
+});
