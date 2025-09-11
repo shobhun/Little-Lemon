@@ -36,7 +36,7 @@ const OnboardingScreen = () => {
         setCurrentComp(currentComp + 1);
       } else if (currentComp === 3) {
         saveData(
-          "Personal_Details",
+          "Personal_Detail",
           JSON.stringify({ firstName, lastName, email })
         );
         navigation.reset({index:0, routes: [{name: "Home"}]});

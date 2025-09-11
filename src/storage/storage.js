@@ -12,5 +12,6 @@ export const retrieveData = async (key) => {
 
 // Asyn Storage function to delete the key.
 export const deleteKey = async (key) => {
-    await AsyncStorage.deleteKey(key);
+    await AsyncStorage.removeItem(key);
+    console.log(`Key "${key}" deleted successfully`);
 }  
