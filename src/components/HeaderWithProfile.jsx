@@ -16,7 +16,7 @@ const HeaderWithProfile = () => {
 
   useEffect(() => {
     async function fetchPersonalData() {
-      const personalData = await retrieveData("Personal_Details");
+      const personalData = await retrieveData("Personal_Detail");
       const parsedPersonalData = JSON.parse(personalData);
       setuserInitials(
         parsedPersonalData.firstName[0] + parsedPersonalData.lastName[0]
