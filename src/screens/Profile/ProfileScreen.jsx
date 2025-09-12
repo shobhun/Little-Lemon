@@ -29,15 +29,16 @@ const ProfileScreen = () => {
   };
 
   const confirmYes = () => {
-    setUser(null);
-    deleteKey("Personal_Details");
-    navigation.reset({index:0, routes: [{name: "Animation"}]});
+    deleteKey("Personal_Detail");
+    setShowPopup(!showPopup);
+    navigation.reset({index:0, routes: [{name: "Onboarding"}]});
     console.log("logout Done!");
+    setUser("");
   };
 
   const confirmNo = () => {
     setShowPopup(!showPopup);
-    console.log("Dont Logout from the application!");
+    console.log("Don't Logout from the application!");
   };
 
   return (
@@ -101,19 +102,19 @@ const ProfileScreen = () => {
           <TextInput
             style={styles.inputField}
             editable={false}
-            value={user.firstName}
+            value={user?.firstName ?? " "}
           />
           <Text style={styles.textHeader}>Last Name</Text>
           <TextInput
             style={styles.inputField}
             editable={false}
-            value={user.lastName}
+            value={user?.lastName ?? " "}
           />
           <Text style={styles.textHeader}>Email</Text>
           <TextInput
             style={styles.inputField}
             editable={false}
-            value={user.email}
+            value={user?.email ?? " "}
           />
           <Text style={styles.textHeader}>Phone Number</Text>
           <TextInput style={styles.inputField} editable />
