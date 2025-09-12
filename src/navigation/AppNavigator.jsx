@@ -10,26 +10,12 @@ import { isEmpty } from "../utils/validation";
 const Stack = createStackNavigator();
 // Common function to handle the navigation of the application.
 const AppNavigator = () => {
-  const { user } = useContext(UserContext);
-
-  // Conditional Rendering of the screen based on the login of user!
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {
-      isEmpty(user) ? (
-        <>
-          <Stack.Screen name="Animation" component={Animation} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="Animation" component={Animation} />
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-        </>
-      )}
+      <Stack.Screen name="Animation" component={Animation} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };

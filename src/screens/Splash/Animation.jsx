@@ -2,18 +2,34 @@ import { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 import { UserContext } from "../../context/UserContext";
-import { isEmpty } from "../../utils/validation";
+import { retrieveData } from "../../storage/storage";
 
 export default function Animation() {
-  const {user} = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace(isEmpty(user) ? "Home" : "Onboarding");
-    }, 2500);
+    const checkUserAndNavigate = async () => {
+      // Load Data
+      const asyncData = await retrieveData("Personal_Detail");
+      const parsedAsyncData = JSON.parse(asyncData);
 
-    return () => clearTimeout(timer); // cleanup
-  }, []);
+      // Update Context
+      setUser(parsedAsyncData);
+
+      // Navigate after splash Delay
+      setTimeout(()=>{
+        if(parsedAsyncData){
+          console.log("User exists → navigating to Home");
+          navigation.replace("Home");
+        }else{
+          console.log("No user → navigating to Onboarding");
+          navigation.replace("Onboarding");
+        }
+      },2500)      
+    };
+    checkUserAndNavigate();
+  },[]);
+
   const navigation = useNavigation();
 
   return (
