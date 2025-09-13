@@ -15,3 +15,8 @@ export const deleteKey = async (key) => {
     await AsyncStorage.removeItem(key);
     console.log(`Key "${key}" deleted successfully`);
 }  
+
+// Asyn Storage function to merge the item.
+export const mergeData = async (key,value) => {
+    await AsyncStorage.mergeItem(key,value);
+}
