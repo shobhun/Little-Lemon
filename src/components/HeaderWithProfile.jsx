@@ -2,7 +2,7 @@ import { StyleSheet, View, Image, Text, Pressable } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState, useContext } from "react";
 import { dynamicWidth } from "../constants/metrics";
-import { retrieveData } from "../storage/storage";
+import { retrieveData, mergeData } from "../storage/storage";
 import { UserContext } from "../context/UserContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -45,6 +45,7 @@ const HeaderWithProfile = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      await mergeData("Personal_Detail",JSON.stringify({image: result.assets[0].uri}))
     }
   };
 
