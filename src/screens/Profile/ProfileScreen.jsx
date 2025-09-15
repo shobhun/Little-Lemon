@@ -7,6 +7,8 @@ import {
   TextInput,
   View,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import HeaderWithProfile from "../../components/HeaderWithProfile";
@@ -70,20 +72,11 @@ const ProfileScreen = () => {
           // the null value of state variable should not be passed.
           // Instead it should take value from user if it exists!
           phNumber: phNumber == null ? user.phNumber : phNumber,
-          orderStatus:
-            orderStatus == null
-              ? user.orderStatus
-              : orderStatus,
+          orderStatus: orderStatus == null ? user.orderStatus : orderStatus,
           passwordChange:
-            passwordChange == null
-              ? user.passwordChange
-              : passwordChange,
-          specialOffer:
-            specialOffer == null
-              ? user.specialOffer
-              : specialOffer,
-          newsletter:
-            newsletter == null ? user.newsletter : newsletter,
+            passwordChange == null ? user.passwordChange : passwordChange,
+          specialOffer: specialOffer == null ? user.specialOffer : specialOffer,
+          newsletter: newsletter == null ? user.newsletter : newsletter,
         })
       );
 
@@ -154,161 +147,173 @@ const ProfileScreen = () => {
           message="Are you sure you want to log out?"
         />
       )}
-      <ScrollView>
-        <View style={styles.viewConatiner}>
-          <Text style={styles.textMainHeading}>Personal Information</Text>
-          <Text style={styles.textHeader}>Avatar</Text>
-          <View style={styles.btnProfileViewMain}>
-            <Image
-              style={styles.image}
-              source={
-                avtar != null ? { uri: avtar } : require("../../image/user.png")
-              }
-            />
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <Pressable
-                style={[
-                  styles.btnSave,
-                  { width: dynamicWidth(0.27), marginLeft: 20 },
-                ]}
-                onPress={changeAvtar}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "500",
-                    color: "#FFFFFF",
-                    letterSpacing: 1,
-                  }}
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 0}
+        style={{ flex: 1, flexDirection: "column" }}
+      >
+        <ScrollView>
+          <View style={styles.viewConatiner}>
+            <Text style={styles.textMainHeading}>Personal Information</Text>
+            <Text style={styles.textHeader}>Avatar</Text>
+            <View style={styles.btnProfileViewMain}>
+              <Image
+                style={styles.image}
+                source={
+                  avtar != null
+                    ? { uri: avtar }
+                    : require("../../image/user.png")
+                }
+              />
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <Pressable
+                  style={[
+                    styles.btnSave,
+                    { width: dynamicWidth(0.27), marginLeft: 20 },
+                  ]}
+                  onPress={changeAvtar}
                 >
-                  Change
-                </Text>
-              </Pressable>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "500",
+                      color: "#FFFFFF",
+                      letterSpacing: 1,
+                    }}
+                  >
+                    Change
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.btnDiscard,
+                    { width: dynamicWidth(0.27), marginLeft: 20 },
+                  ]}
+                  onPress={removeAvtar}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "500",
+                      color: "#8A8DA2",
+                      letterSpacing: 1,
+                    }}
+                  >
+                    Remove
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+            <Text style={styles.textHeader}>First Name</Text>
+            <TextInput
+              style={styles.inputField}
+              editable={false}
+              value={user?.firstName ?? " "}
+            />
+            <Text style={styles.textHeader}>Last Name</Text>
+            <TextInput
+              style={styles.inputField}
+              editable={false}
+              value={user?.lastName ?? " "}
+            />
+            <Text style={styles.textHeader}>Email</Text>
+            <TextInput
+              style={styles.inputField}
+              editable={false}
+              value={user?.email ?? " "}
+            />
+            <Text style={styles.textHeader}>Phone Number</Text>
+            <TextInput
+              style={styles.inputField}
+              editable
+              maxLength={10}
+              value={phNumber == null ? user.phNumber : phNumber}
+              onChangeText={setPhNumber}
+              keyboardType="numeric"
+            />
+            <Text style={styles.textEmailHeading}>Email Notifications</Text>
+            <BouncyCheckbox
+              isChecked={orderStatus == null ? user.orderStatus : orderStatus}
+              style={styles.checkBox}
+              text="Order Status"
+              onPress={(value) => {
+                setOrderStatus(value);
+                console.log("Order Status -> " + value);
+              }}
+              textStyle={{ textDecorationLine: "none" }}
+            />
+            <BouncyCheckbox
+              isChecked={
+                passwordChange == null ? user.passwordChange : passwordChange
+              }
+              style={styles.checkBox}
+              text="Password Changes"
+              onPress={(value) => {
+                setPasswordChange(value);
+                console.log("Password Changes -> " + value);
+              }}
+              textStyle={{ textDecorationLine: "none" }}
+            />
+            <BouncyCheckbox
+              isChecked={
+                specialOffer == null ? user.specialOffer : specialOffer
+              }
+              style={styles.checkBox}
+              text="Special Offers"
+              onPress={(value) => {
+                setSpecialOffer(value);
+                console.log("Special Offers -> " + value);
+              }}
+              textStyle={{ textDecorationLine: "none" }}
+            />
+            <BouncyCheckbox
+              isChecked={newsletter == null ? user.newsletter : newsletter}
+              style={styles.checkBox}
+              text="Newsletter"
+              onPress={(value) => {
+                setNewsletter(value);
+                console.log("Newsletter -> " + value);
+              }}
+              textStyle={{ textDecorationLine: "none" }}
+            />
+            <Pressable style={styles.btnLogout} onPress={performLogout}>
+              <Text style={{ fontSize: 20, fontWeight: "700" }}>Log Out</Text>
+            </Pressable>
+            <View style={styles.btnView}>
               <Pressable
-                style={[
-                  styles.btnDiscard,
-                  { width: dynamicWidth(0.27), marginLeft: 20 },
-                ]}
-                onPress={removeAvtar}
+                style={[styles.btnDiscard, { width: dynamicWidth(0.4) }]}
+                onPress={discardChanges}
               >
                 <Text
                   style={{
                     fontSize: 20,
-                    fontWeight: "500",
+                    fontWeight: "700",
                     color: "#8A8DA2",
                     letterSpacing: 1,
                   }}
                 >
-                  Remove
+                  Discard
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[styles.btnSave, { width: dynamicWidth(0.4) }]}
+                onPress={saveProfileData}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "700",
+                    color: "#FFFFFF",
+                    letterSpacing: 1,
+                  }}
+                >
+                  Save
                 </Text>
               </Pressable>
             </View>
           </View>
-          <Text style={styles.textHeader}>First Name</Text>
-          <TextInput
-            style={styles.inputField}
-            editable={false}
-            value={user?.firstName ?? " "}
-          />
-          <Text style={styles.textHeader}>Last Name</Text>
-          <TextInput
-            style={styles.inputField}
-            editable={false}
-            value={user?.lastName ?? " "}
-          />
-          <Text style={styles.textHeader}>Email</Text>
-          <TextInput
-            style={styles.inputField}
-            editable={false}
-            value={user?.email ?? " "}
-          />
-          <Text style={styles.textHeader}>Phone Number</Text>
-          <TextInput
-            style={styles.inputField}
-            editable
-            maxLength={10}
-            value={phNumber == null ? user.phNumber : phNumber}
-            onChangeText={setPhNumber}
-            keyboardType="numeric"
-          />
-          <Text style={styles.textEmailHeading}>Email Notifications</Text>
-          <BouncyCheckbox
-            isChecked={orderStatus == null ? user.orderStatus : orderStatus}
-            style={styles.checkBox}
-            text="Order Status"
-            onPress={(value) => {
-              setOrderStatus(value);
-              console.log("Order Status -> " + value);
-            }}
-            textStyle={{ textDecorationLine: "none" }}
-          />
-          <BouncyCheckbox
-            isChecked={passwordChange == null ? user.passwordChange : passwordChange}
-            style={styles.checkBox}
-            text="Password Changes"
-            onPress={(value) => {
-              setPasswordChange(value);
-              console.log("Password Changes -> " + value);
-            }}
-            textStyle={{ textDecorationLine: "none" }}
-          />
-          <BouncyCheckbox
-            isChecked={specialOffer == null ? user.specialOffer : specialOffer}
-            style={styles.checkBox}
-            text="Special Offers"
-            onPress={(value) => {
-              setSpecialOffer(value);
-              console.log("Special Offers -> " + value);
-            }}
-            textStyle={{ textDecorationLine: "none" }}
-          />
-          <BouncyCheckbox
-            isChecked={newsletter == null ? user.newsletter : newsletter}
-            style={styles.checkBox}
-            text="Newsletter"
-            onPress={(value) => {
-              setNewsletter(value);
-              console.log("Newsletter -> " + value);
-            }}
-            textStyle={{ textDecorationLine: "none" }}
-          />
-          <Pressable style={styles.btnLogout} onPress={performLogout}>
-            <Text style={{ fontSize: 20, fontWeight: "700" }}>Log Out</Text>
-          </Pressable>
-          <View style={styles.btnView}>
-            <Pressable
-              style={[styles.btnDiscard, { width: dynamicWidth(0.4) }]}
-              onPress={discardChanges}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "700",
-                  color: "#8A8DA2",
-                  letterSpacing: 1,
-                }}
-              >
-                Discard
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.btnSave, { width: dynamicWidth(0.4) }]}
-              onPress={saveProfileData}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "700",
-                  color: "#FFFFFF",
-                  letterSpacing: 1,
-                }}
-              >
-                Save
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
