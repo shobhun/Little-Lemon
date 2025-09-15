@@ -14,6 +14,7 @@ const HeaderWithProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
+  // This is use to fetch data first time the Header is visited!
   useEffect(() => {
     async function fetchPersonalData() {
       const personalData = await retrieveData("Personal_Detail");
@@ -28,7 +29,8 @@ const HeaderWithProfile = () => {
     }
     fetchPersonalData();
   }, []);
-
+  
+  // This is use to be called every time the image changes.
   useEffect(() => {
     console.log("Updated initials:", userInitials);
     console.log("Context Variable:", user);
