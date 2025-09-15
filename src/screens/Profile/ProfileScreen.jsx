@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import HeaderWithProfile from "../../components/HeaderWithProfile";
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
 import { dynamicWidth } from "../../constants/metrics";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
