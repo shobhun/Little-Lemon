@@ -15,7 +15,7 @@ import { UserContext } from "../../context/UserContext";
 import { dynamicWidth } from "../../constants/metrics";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
 import { useNavigation } from "@react-navigation/native";
-import { deleteKey, mergeData } from "../../storage/storage";
+import { deleteKey, mergeData, retrieveData } from "../../storage/storage";
 import * as ImagePicker from "expo-image-picker";
 
 const ProfileScreen = () => {
@@ -25,13 +25,12 @@ const ProfileScreen = () => {
   const [phNumber, setPhNumber] = useState(null);
   const [avtar, setAvtar] = useState(null);
   const navigation = useNavigation();
-  const orderStatus = useRef(null);
-  const passwordChange = useRef(null);
-  const specialOffer = useRef(null);
-  const newsletter = useRef(null);
+  const [orderStatus, setOrderStatus] = useState(null);
+  const [passwordChange, setPasswordChange] = useState(null);
+  const [specialOffer, setSpecialOffer] = useState(null);
+  const [newsletter, setNewsletter] = useState(null);
 
   // This function is created to show the change the avtar whenever it being changed from the header!
-  // WIP still not working!
   useEffect(() => {
     console.log("Use Effect Hook in Profile Screen");
     setAvtar(user.image);
@@ -72,19 +71,19 @@ const ProfileScreen = () => {
           // Instead it should take value from user if it exists!
           phNumber: phNumber == null ? user.phNumber : phNumber,
           orderStatus:
-            orderStatus.current == null
+            orderStatus == null
               ? user.orderStatus
-              : orderStatus.current,
+              : orderStatus,
           passwordChange:
-            passwordChange.current == null
+            passwordChange == null
               ? user.passwordChange
-              : passwordChange.current,
+              : passwordChange,
           specialOffer:
-            specialOffer.current == null
+            specialOffer == null
               ? user.specialOffer
-              : specialOffer.current,
+              : specialOffer,
           newsletter:
-            newsletter.current == null ? user.newsletter : newsletter.current,
+            newsletter == null ? user.newsletter : newsletter,
         })
       );
 
@@ -93,10 +92,10 @@ const ProfileScreen = () => {
         ...user,
         image: avtar,
         phNumber: phNumber == null ? user.phNumber : phNumber,
-        orderStatus: orderStatus.current ?? user.orderStatus,
-        passwordChange: passwordChange.current ?? user.passwordChange,
-        specialOffer: specialOffer.current ?? user.specialOffer,
-        newsletter: newsletter.current ?? user.newsletter,
+        orderStatus: orderStatus ?? user.orderStatus,
+        passwordChange: passwordChange ?? user.passwordChange,
+        specialOffer: specialOffer ?? user.specialOffer,
+        newsletter: newsletter ?? user.newsletter,
       });
 
       alert("Data Saved Successfully!");
@@ -106,9 +105,20 @@ const ProfileScreen = () => {
   };
 
   //Function to discard all the new changes in Profile Section and will be called on DISCARD button click.
-  const discardChanges = () => {
-    setAvtar(user.image);
-    setPhNumber(user.phNumber == null ? null : user.phNumber);
+  const discardChanges = async () => {
+    try {
+      const savedData = await retrieveData("Personal_Detail");
+      const parsedSavedData = JSON.parse(savedData);
+      setUser(parsedSavedData);
+      setAvtar(user.image);
+      setPhNumber(user.phNumber);
+      setPasswordChange(user.passwordChange);
+      setOrderStatus(user.orderStatus);
+      setSpecialOffer(user.specialOffer);
+      setNewsletter(user.newsletter);
+    } catch (e) {
+      console.log("discardChanges : " + JSON.stringify(e));
+    }
   };
 
   // Function for changing avtar and will be called on click of CHANGE button
@@ -216,47 +226,48 @@ const ProfileScreen = () => {
           <TextInput
             style={styles.inputField}
             editable
+            maxLength={10}
             value={phNumber == null ? user.phNumber : phNumber}
             onChangeText={setPhNumber}
             keyboardType="numeric"
           />
           <Text style={styles.textEmailHeading}>Email Notifications</Text>
           <BouncyCheckbox
-            isChecked={user.orderStatus}
+            isChecked={orderStatus == null ? user.orderStatus : orderStatus}
             style={styles.checkBox}
             text="Order Status"
             onPress={(value) => {
-              orderStatus.current = value;
+              setOrderStatus(value);
               console.log("Order Status -> " + value);
             }}
             textStyle={{ textDecorationLine: "none" }}
           />
           <BouncyCheckbox
-            isChecked={user.passwordChange}
+            isChecked={passwordChange == null ? user.passwordChange : passwordChange}
             style={styles.checkBox}
             text="Password Changes"
             onPress={(value) => {
-              passwordChange.current = value;
+              setPasswordChange(value);
               console.log("Password Changes -> " + value);
             }}
             textStyle={{ textDecorationLine: "none" }}
           />
           <BouncyCheckbox
-            isChecked={user.specialOffer}
+            isChecked={specialOffer == null ? user.specialOffer : specialOffer}
             style={styles.checkBox}
             text="Special Offers"
             onPress={(value) => {
-              specialOffer.current = value;
+              setSpecialOffer(value);
               console.log("Special Offers -> " + value);
             }}
             textStyle={{ textDecorationLine: "none" }}
           />
           <BouncyCheckbox
-            isChecked={user.newsletter}
+            isChecked={newsletter == null ? user.newsletter : newsletter}
             style={styles.checkBox}
             text="Newsletter"
             onPress={(value) => {
-              newsletter.current = value;
+              setNewsletter(value);
               console.log("Newsletter -> " + value);
             }}
             textStyle={{ textDecorationLine: "none" }}
