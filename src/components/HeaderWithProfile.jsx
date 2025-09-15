@@ -32,7 +32,7 @@ const HeaderWithProfile = () => {
   useEffect(() => {
     console.log("Updated initials:", userInitials);
     console.log("Context Variable:", user);
-    setImage(user.image);
+    setImage(user?.image);
   }, [user]);
 
   const pickImage = async () => {
@@ -87,7 +87,7 @@ const HeaderWithProfile = () => {
       </View>
       <Image style={styles.headerImg} source={require("../image/logo.png")} />
       <Pressable style={styles.profileView} onPress={navigateToProfileScreen}>
-        {image || user.image ? (
+        {image || user?.image ? (
           <Image
             source={{ uri: user.image == null ? image : user.image }}
             style={styles.profileImage}
