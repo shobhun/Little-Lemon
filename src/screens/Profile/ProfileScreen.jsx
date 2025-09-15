@@ -10,35 +10,127 @@ import {
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import HeaderWithProfile from "../../components/HeaderWithProfile";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
 import { dynamicWidth } from "../../constants/metrics";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
 import { useNavigation } from "@react-navigation/native";
-import { deleteKey } from "../../storage/storage";
+import { deleteKey, mergeData } from "../../storage/storage";
+import * as ImagePicker from "expo-image-picker";
 
 const ProfileScreen = () => {
   // Constant created, to use and update the values using useContext hook.
   const { user, setUser } = useContext(UserContext);
   const [showPopup, setShowPopup] = useState(false);
+  const [phNumber, setPhNumber] = useState(null);
+  const [avtar, setAvtar] = useState(null);
   const navigation = useNavigation();
+  const orderStatus = useRef(null);
+  const passwordChange = useRef(null);
+  const specialOffer = useRef(null);
+  const newsletter = useRef(null);
 
+  // This function is created to show the change the avtar whenever it being changed from the header!
+  // WIP still not working!
+  useEffect(() => {
+    console.log("Use Effect Hook in Profile Screen");
+    setAvtar(user.image);
+  }, [user]);
+
+  // The is function called to perform Logout on click of LOGOUT button
+  // The confirmation popup will be shown!
   const performLogout = () => {
     setShowPopup(!showPopup);
     console.log("You are about to logout!");
   };
 
+  // This is the function called when we click YES on the logout confirmation popup.
   const confirmYes = () => {
     deleteKey("Personal_Detail");
     setShowPopup(!showPopup);
-    navigation.reset({index:0, routes: [{name: "Onboarding"}]});
+    navigation.reset({ index: 0, routes: [{ name: "Onboarding" }] });
     console.log("logout Done!");
     setUser("");
   };
 
+  // This is the function called when we click NO on the logout confirmation popup.
   const confirmNo = () => {
     setShowPopup(!showPopup);
     console.log("Don't Logout from the application!");
+  };
+
+  // This is the function to save the Profile Data and will be called on click of SAVE button
+  const saveProfileData = async () => {
+    try {
+      console.log("Phone number : " + phNumber + " " + user.phNumber);
+      await mergeData(
+        "Personal_Detail",
+        JSON.stringify({
+          image: avtar,
+          // The reason why I am doing null check before sending is to asyncStore is incase I dont make any change,
+          // the null value of state variable should not be passed.
+          // Instead it should take value from user if it exists!
+          phNumber: phNumber == null ? user.phNumber : phNumber,
+          orderStatus:
+            orderStatus.current == null
+              ? user.orderStatus
+              : orderStatus.current,
+          passwordChange:
+            passwordChange.current == null
+              ? user.passwordChange
+              : passwordChange.current,
+          specialOffer:
+            specialOffer.current == null
+              ? user.specialOffer
+              : specialOffer.current,
+          newsletter:
+            newsletter.current == null ? user.newsletter : newsletter.current,
+        })
+      );
+
+      // This helps me to update all the versions of Context to latest updated data!
+      setUser({
+        ...user,
+        image: avtar,
+        phNumber: phNumber == null ? user.phNumber : phNumber,
+        orderStatus: orderStatus.current ?? user.orderStatus,
+        passwordChange: passwordChange.current ?? user.passwordChange,
+        specialOffer: specialOffer.current ?? user.specialOffer,
+        newsletter: newsletter.current ?? user.newsletter,
+      });
+
+      alert("Data Saved Successfully!");
+    } catch (error) {
+      console.log("saveProfileData error : " + JSON.stringify(error));
+    }
+  };
+
+  //Function to discard all the new changes in Profile Section and will be called on DISCARD button click.
+  const discardChanges = () => {
+    setAvtar(user.image);
+    setPhNumber(user.phNumber == null ? null : user.phNumber);
+  };
+
+  // Function for changing avtar and will be called on click of CHANGE button
+  const changeAvtar = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setAvtar(result.assets[0].uri);
+    }
+  };
+
+  // Function for removing avtar and will be called on click of REMOVE button
+  const removeAvtar = () => {
+    setAvtar(null);
   };
 
   return (
@@ -59,7 +151,9 @@ const ProfileScreen = () => {
           <View style={styles.btnProfileViewMain}>
             <Image
               style={styles.image}
-              source={require("../../image/user.png")}
+              source={
+                avtar != null ? { uri: avtar } : require("../../image/user.png")
+              }
             />
             <View style={{ flexDirection: "row", marginTop: 10 }}>
               <Pressable
@@ -67,6 +161,7 @@ const ProfileScreen = () => {
                   styles.btnSave,
                   { width: dynamicWidth(0.27), marginLeft: 20 },
                 ]}
+                onPress={changeAvtar}
               >
                 <Text
                   style={{
@@ -84,6 +179,7 @@ const ProfileScreen = () => {
                   styles.btnDiscard,
                   { width: dynamicWidth(0.27), marginLeft: 20 },
                 ]}
+                onPress={removeAvtar}
               >
                 <Text
                   style={{
@@ -117,18 +213,61 @@ const ProfileScreen = () => {
             value={user?.email ?? " "}
           />
           <Text style={styles.textHeader}>Phone Number</Text>
-          <TextInput style={styles.inputField} editable />
+          <TextInput
+            style={styles.inputField}
+            editable
+            value={phNumber == null ? user.phNumber : phNumber}
+            onChangeText={setPhNumber}
+            keyboardType="numeric"
+          />
           <Text style={styles.textEmailHeading}>Email Notifications</Text>
-          <BouncyCheckbox style={styles.checkBox} text="Order Status" />
-          <BouncyCheckbox style={styles.checkBox} text="Password Changes" />
-          <BouncyCheckbox style={styles.checkBox} text="Special Offers" />
-          <BouncyCheckbox style={styles.checkBox} text="Newsletter" />
+          <BouncyCheckbox
+            isChecked={user.orderStatus}
+            style={styles.checkBox}
+            text="Order Status"
+            onPress={(value) => {
+              orderStatus.current = value;
+              console.log("Order Status -> " + value);
+            }}
+            textStyle={{ textDecorationLine: "none" }}
+          />
+          <BouncyCheckbox
+            isChecked={user.passwordChange}
+            style={styles.checkBox}
+            text="Password Changes"
+            onPress={(value) => {
+              passwordChange.current = value;
+              console.log("Password Changes -> " + value);
+            }}
+            textStyle={{ textDecorationLine: "none" }}
+          />
+          <BouncyCheckbox
+            isChecked={user.specialOffer}
+            style={styles.checkBox}
+            text="Special Offers"
+            onPress={(value) => {
+              specialOffer.current = value;
+              console.log("Special Offers -> " + value);
+            }}
+            textStyle={{ textDecorationLine: "none" }}
+          />
+          <BouncyCheckbox
+            isChecked={user.newsletter}
+            style={styles.checkBox}
+            text="Newsletter"
+            onPress={(value) => {
+              newsletter.current = value;
+              console.log("Newsletter -> " + value);
+            }}
+            textStyle={{ textDecorationLine: "none" }}
+          />
           <Pressable style={styles.btnLogout} onPress={performLogout}>
             <Text style={{ fontSize: 20, fontWeight: "700" }}>Log Out</Text>
           </Pressable>
           <View style={styles.btnView}>
             <Pressable
               style={[styles.btnDiscard, { width: dynamicWidth(0.4) }]}
+              onPress={discardChanges}
             >
               <Text
                 style={{
@@ -141,7 +280,10 @@ const ProfileScreen = () => {
                 Discard
               </Text>
             </Pressable>
-            <Pressable style={[styles.btnSave, { width: dynamicWidth(0.4) }]}>
+            <Pressable
+              style={[styles.btnSave, { width: dynamicWidth(0.4) }]}
+              onPress={saveProfileData}
+            >
               <Text
                 style={{
                   fontSize: 20,
@@ -223,6 +365,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     width: 100,
     height: 100,
+    borderRadius: 50,
   },
   btnDiscard: {
     height: 50,

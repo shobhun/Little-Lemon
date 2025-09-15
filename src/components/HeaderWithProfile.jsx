@@ -23,6 +23,8 @@ const HeaderWithProfile = () => {
       );
       setUser(parsedPersonalData);
       console.log("Personal data:", personalData);
+
+      console.log(JSON.stringify(parsedPersonalData.image));
     }
     fetchPersonalData();
   }, []);
@@ -30,7 +32,8 @@ const HeaderWithProfile = () => {
   useEffect(() => {
     console.log("Updated initials:", userInitials);
     console.log("Context Variable:", user);
-  }, [userInitials]);
+    setImage(user.image);
+  }, [user]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -45,7 +48,18 @@ const HeaderWithProfile = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      await mergeData("Personal_Detail",JSON.stringify({image: result.assets[0].uri}))
+      await mergeData(
+        "Personal_Detail",
+        JSON.stringify({ image: result.assets[0].uri })
+      );
+
+      // This is done to update all the instance of useContext.
+      setUser({
+        ...user,
+        image: result.assets[0].uri,
+      });
+
+      alert("Profile Picture Updated!");
     }
   };
 
@@ -53,7 +67,7 @@ const HeaderWithProfile = () => {
     if (route.name != "Profile") {
       console.log("Navigation State :: " + JSON.stringify(route.name));
       navigation.navigate("Profile");
-    }else if(route.name == "Profile"){
+    } else if (route.name == "Profile") {
       pickImage();
     }
   };
@@ -62,19 +76,22 @@ const HeaderWithProfile = () => {
     <View style={styles.container}>
       <View style={styles.backView}>
         {route.name !== "Home" && (
-        <Pressable
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Image style={styles.image} source={require("../image/back.png")} />
-        </Pressable>
-      )}
+          <Pressable
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Image style={styles.image} source={require("../image/back.png")} />
+          </Pressable>
+        )}
       </View>
       <Image style={styles.headerImg} source={require("../image/logo.png")} />
       <Pressable style={styles.profileView} onPress={navigateToProfileScreen}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.profileImage} />
+        {image || user.image ? (
+          <Image
+            source={{ uri: user.image == null ? image : user.image }}
+            style={styles.profileImage}
+          />
         ) : (
           <Text style={styles.textInitials}>{userInitials}</Text>
         )}
@@ -94,7 +111,7 @@ const styles = StyleSheet.create({
   },
   headerImg: {
     height: 70,
-    width: dynamicWidth(0.70),
+    width: dynamicWidth(0.7),
     resizeMode: "contain",
     padding: 10,
     backgroundColor: "#DEE2EB",
@@ -104,7 +121,7 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   profileView: {
     height: 50,
@@ -120,12 +137,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     padding: 5,
-    marginLeft: 2
+    marginLeft: 2,
   },
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 50
+    borderRadius: 50,
   },
   textInitials: {
     fontSize: 25,

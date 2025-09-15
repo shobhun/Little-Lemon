@@ -24,7 +24,7 @@ const OnboardingScreen = () => {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
-  showNextComp = () => {
+  const showNextComponent = () => {
     if (isEmpty(firstName) && currentComp === 1) {
       alert("Please enter a valid First Name");
     } else if (isEmpty(lastName) && currentComp === 2) {
@@ -39,12 +39,12 @@ const OnboardingScreen = () => {
           "Personal_Detail",
           JSON.stringify({ firstName, lastName, email })
         );
-        navigation.reset({index:0, routes: [{name: "Home"}]});
+        navigation.reset({ index: 0, routes: [{ name: "Home" }] });
       }
     }
   };
 
-  showPreviousComp = () => {
+  const showPreviousComp = () => {
     if (currentComp !== 1) {
       setCurrentComp(currentComp - 1);
     }
@@ -105,7 +105,7 @@ const OnboardingScreen = () => {
                   currentComp === 1 ? dynamicWidth(0.9) : dynamicWidth(0.43),
               },
             ]}
-            onPress={showNextComp}
+            onPress={showNextComponent}
           >
             <Text style={styles.btnText}>
               {currentComp !== 3 ? "Next" : "Submit"}
@@ -120,9 +120,9 @@ const OnboardingScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   container: {
     flex: 1,
