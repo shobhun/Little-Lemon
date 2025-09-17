@@ -32,7 +32,7 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 
 | Onboarding | Home | Profile |
 |------------|------|----------|
-| ![Onboarding](src/docs/screens/onboarding.png) | ![Home](docs/screens/home.png) | ![Profile](src/docs/screens/profile.png) |
+| ![Onboarding](src/docs/screens/onboarding.png) | ![Home](src/docs/screens/home.png) | ![Profile](src/docs/screens/profile.png) |
 
 *(I have to add screenshots in the `/docs/screens` folder)* -- WIP
 
