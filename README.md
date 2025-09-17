@@ -30,9 +30,9 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 
 ## 📸 Screenshots
 
-| Onboarding | Menu | Profile |
+| Onboarding | Home | Profile |
 |------------|------|----------|
-| ![Onboarding](src/docs/screens/onboarding.png) | ![Menu](docs/screens/menu.png) | ![Profile](src/docs/screens/profile.png) |
+| ![Onboarding](src/docs/screens/onboarding.png) | ![Home](docs/screens/home.png) | ![Profile](src/docs/screens/profile.png) |
 
 *(I have to add screenshots in the `/docs/screens` folder)* -- WIP
 
