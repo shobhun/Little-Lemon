@@ -13,16 +13,46 @@ import HeaderWithProfile from "../../components/HeaderWithProfile";
 import { dynamicHeight, dynamicWidth } from "../../constants/metrics";
 import { Ionicons } from "@expo/vector-icons";
 import { data } from "../../utils/sampleData";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getMenuData, insertMenuItems } from "../../storage/dbUtils";
 
 const HomeScreen = () => {
+  const [menuData, setMenuData] = useState(null);
   const prefImage =
     "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/refs/heads/main/images/";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // ✅ Step 1: Try to load from SQLite
+      const localData = await getMenuData();
+      console.log(JSON.stringify(localData.length));
+
+      if (localData.length > 0) {
+        console.log("📦 Loaded from SQLite:", localData);
+        setMenuData(localData);
+      } else {
+        // ✅ Step 2: If empty, fetch from API
+        const response = await axios.get(
+          "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json"
+        );
+        console.log("🌐 Fetched from API:",JSON.stringify(response.data.menu));
+
+        // ✅ Step 3: Save to SQLite
+        await insertMenuItems(response.data.menu);
+
+        // ✅ Step 4: Update UI
+        setMenuData(response.data.menu);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Show single List of Flatlist
   const Items = ({ title, price, description, image }) => {
     return (
-      <View style={{ flexDirection: "column", margin: 10  }}>
-        <View style={{ flexDirection: "row"}}>
+      <View style={{ flexDirection: "column", margin: 10 }}>
+        <View style={{ flexDirection: "row" }}>
           <View style={{ flexDirection: "column", width: dynamicWidth(0.6) }}>
             <Text
               style={{ fontSize: 20, fontWeight: "bold", letterSpacing: 1 }}
@@ -56,16 +86,18 @@ const HomeScreen = () => {
             style={{
               width: dynamicWidth(0.4),
               padding: 10,
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <Image
-              style={{ width: 100, height: 100, borderRadius:20 }}
+              style={{ width: 100, height: 100, borderRadius: 20 }}
               source={{ uri: prefImage + image }}
             />
           </View>
         </View>
-        <View style={{ marginTop:10, height: 2, backgroundColor: "#CCCCCC" }}/>
+        <View
+          style={{ marginTop: 10, height: 2, backgroundColor: "#CCCCCC" }}
+        />
       </View>
     );
   };
@@ -196,7 +228,7 @@ const HomeScreen = () => {
             />
             <View style={{ flex: 1, marginTop: 15 }}>
               <FlatList
-                data={data.menu}
+                data={menuData}//{data.menu}
                 renderItem={({ item }) => (
                   <Items
                     title={item.name}
