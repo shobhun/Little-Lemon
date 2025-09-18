@@ -34,6 +34,10 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 |------------|------|----------|
 | ![Onboarding](src/docs/screens/onboarding.png) | ![Home](src/docs/screens/home.png) | ![Profile](src/docs/screens/profile.png) |
 
+| Wireframe | 
+|-----------|
+| ![Wireframe](src/docs/screens/wireframes.png) |
+
 ---
 
 ## 📂 Project Structure
