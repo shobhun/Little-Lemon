@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  Pressable,
 } from "react-native";
 import HeaderWithProfile from "../../components/HeaderWithProfile";
 import { dynamicHeight, dynamicWidth } from "../../constants/metrics";
@@ -15,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { data } from "../../utils/sampleData";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { getMenuData, insertMenuItems } from "../../storage/dbUtils";
+import { getMenuData, getSelectedData, insertMenuItems } from "../../storage/dbUtils";
 
 const HomeScreen = () => {
   const [menuData, setMenuData] = useState(null);
@@ -102,6 +103,18 @@ const HomeScreen = () => {
     );
   };
 
+  // Function for calling on Click category!
+  const onClickCategory = async (categoryName) => {
+    const selectedData = await getSelectedData(categoryName);
+    console.log("onClickCategory : "+JSON.stringify(selectedData));
+    console.log("onClickCategory length : "+JSON.stringify(selectedData.length));
+    if(selectedData.length === 0){
+      alert("No item available for this category.\n Will try to add new items to this category. \n Please check for other categories");
+    }else{
+      setMenuData(selectedData);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <HeaderWithProfile />
@@ -174,7 +187,7 @@ const HomeScreen = () => {
                 marginTop: 15,
               }}
             >
-              <View style={{ backgroundColor: "#dae3daff", borderRadius: 10 }}>
+              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("starters")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -185,8 +198,8 @@ const HomeScreen = () => {
                 >
                   Starters
                 </Text>
-              </View>
-              <View style={{ backgroundColor: "#dae3daff", borderRadius: 10 }}>
+              </Pressable>
+              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("mains")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -197,8 +210,8 @@ const HomeScreen = () => {
                 >
                   Mains
                 </Text>
-              </View>
-              <View style={{ backgroundColor: "#dae3daff", borderRadius: 10 }}>
+              </Pressable>
+              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("desserts")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -209,8 +222,8 @@ const HomeScreen = () => {
                 >
                   Desserts
                 </Text>
-              </View>
-              <View style={{ backgroundColor: "#dae3daff", borderRadius: 10 }}>
+              </Pressable>
+              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("drinks")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -221,7 +234,7 @@ const HomeScreen = () => {
                 >
                   Drinks
                 </Text>
-              </View>
+              </Pressable>
             </View>
             <View
               style={{ marginTop: 25, height: 2, backgroundColor: "#CCCCCC" }}

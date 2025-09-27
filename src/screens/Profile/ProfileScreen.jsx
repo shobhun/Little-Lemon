@@ -19,6 +19,7 @@ import ConfirmationPopup from "../../components/ConfirmationPopup";
 import { useNavigation } from "@react-navigation/native";
 import { deleteKey, mergeData, retrieveData } from "../../storage/storage";
 import * as ImagePicker from "expo-image-picker";
+import { clearMenu } from "../../storage/dbUtils";
 
 const ProfileScreen = () => {
   // Constant created, to use and update the values using useContext hook.
@@ -52,6 +53,7 @@ const ProfileScreen = () => {
     navigation.reset({ index: 0, routes: [{ name: "Onboarding" }] });
     console.log("logout Done!");
     setUser("");
+    clearMenu();
   };
 
   // This is the function called when we click NO on the logout confirmation popup.

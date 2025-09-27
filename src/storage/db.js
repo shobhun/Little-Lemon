@@ -2,7 +2,7 @@
 import { openDatabaseSync } from 'expo-sqlite';
 
 // ✅ Open or create database
-const db = openDatabaseSync("menuItem.db");
+const db = openDatabaseSync("menuItem1.db");
 
 // ✅ Create table if not exists
 db.execAsync(`
@@ -11,7 +11,8 @@ db.execAsync(`
     name TEXT NOT NULL,
     price REAL,
     description TEXT,
-    image TEXT
+    image TEXT,
+    category TEXT
   );
 `);
 
