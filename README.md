@@ -63,7 +63,7 @@ LittleLemonApp/
 ## ▶️ Working Video
 
 You can watch the demo here:  
-[🎥 Watch Certification App Demo](src/docs/screens/certificationApp.mp4)
+[🎥 Download Certification App Demo](src/docs/screens/certificationApp.mp4)
 
 ```bash
 └── src
