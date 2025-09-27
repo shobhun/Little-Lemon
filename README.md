@@ -57,3 +57,16 @@ LittleLemonApp/
   ├── screens/            # App screens (Home, Menu, Profile, etc.)
   ├── storage/            # Common place to store the files regarding React Native Storage
   └── utils/              # Single file for Validation.
+
+## ▶️ Working Video
+
+You can watch the demo here:
+[🎥 Watch Certification App Demo](src/docs/screens/certificationApp.mp4)
+
+```bash
+└── src
+  └── docs
+    └── screens
+      └── certificationApp.mp4
+```
+
