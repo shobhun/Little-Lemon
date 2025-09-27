@@ -28,16 +28,6 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 
 ---
 
-## ▶️ Working Video 
-
-```bash
-└── src
-  └── docs
-    └── screens
-      └── certificationApp.mp4      
-
----
-
 ## 📸 Screenshots
 
 | Onboarding | Home | Profile |
@@ -67,3 +57,14 @@ LittleLemonApp/
   ├── screens/            # App screens (Home, Menu, Profile, etc.)
   ├── storage/            # Common place to store the files regarding React Native Storage
   └── utils/              # Single file for Validation.
+---
+
+## ▶️ Working Video 
+
+```bash
+└── src
+  └── docs
+    └── screens
+      └── certificationApp.mp4      
+
+---
