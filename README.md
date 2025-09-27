@@ -60,8 +60,8 @@ LittleLemonApp/
 
 ---
 
-````markdown
----
+```
+```
 
 ## ▶️ Working Video
 
@@ -75,7 +75,6 @@ You can watch the demo here:
       └── certificationApp.mp4
 ````
 
-```
-```
+
 
 
