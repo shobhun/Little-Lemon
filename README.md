@@ -58,13 +58,3 @@ LittleLemonApp/
   ├── storage/            # Common place to store the files regarding React Native Storage
   └── utils/              # Single file for Validation.
 ---
-
-## ▶️ Working Video 
-
-```bash
-└── src
-  └── docs
-    └── screens
-      └── certificationApp.mp4      
-
----
