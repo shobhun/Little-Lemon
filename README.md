@@ -60,15 +60,22 @@ LittleLemonApp/
 
 ---
 
+````markdown
+---
+
 ## ▶️ Working Video
 
-You can watch the demo here:
-[🎥 Watch Certification App Demo](https://github.com/shobhun/Little-Lemon/blob/main/src/docs/screens/certificationApp.mp4?raw=true)
+You can watch the demo here:  
+[🎥 Watch Certification App Demo](src/docs/screens/certificationApp.mp4)
 
 ```bash
 └── src
   └── docs
     └── screens
       └── certificationApp.mp4
+````
+
 ```
+```
+
 
