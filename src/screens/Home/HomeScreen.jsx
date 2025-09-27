@@ -14,12 +14,15 @@ import HeaderWithProfile from "../../components/HeaderWithProfile";
 import { dynamicHeight, dynamicWidth } from "../../constants/metrics";
 import { Ionicons } from "@expo/vector-icons";
 import { data } from "../../utils/sampleData";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { getMenuData, getSelectedData, insertMenuItems } from "../../storage/dbUtils";
+import { getMenuData, getSelectedData, insertMenuItems, getSelectedSearchedData } from "../../storage/dbUtils";
 
 const HomeScreen = () => {
   const [menuData, setMenuData] = useState(null);
+  const selectedCategory = useRef("default");
+  const [search, searchedData] = useState(null);
+
   const prefImage =
     "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/refs/heads/main/images/";
 
@@ -105,14 +108,28 @@ const HomeScreen = () => {
 
   // Function for calling on Click category!
   const onClickCategory = async (categoryName) => {
+    selectedCategory.current = categoryName;
+    searchedData("");
     const selectedData = await getSelectedData(categoryName);
     console.log("onClickCategory : "+JSON.stringify(selectedData));
     console.log("onClickCategory length : "+JSON.stringify(selectedData.length));
     if(selectedData.length === 0){
-      alert("\n Nothing here yet.\n We're adding items to this category soon.\n Try exploring other categories in the meantime!");
+      alert("Nothing here yet. We're adding items to this category soon. Try exploring other categories in the meantime!");
       setMenuData([]);
     }else{
       setMenuData(selectedData);
+    }
+  }
+
+  // Function is called on the textChange of search bar
+  const onClickSearchedData = async (value) => {
+    searchedData(value);
+    console.log("Searched Value : "+ value);
+    if(value.length >= 3){
+      console.log("Inside if : ", selectedCategory.current);
+      const searchedData = await getSelectedSearchedData(selectedCategory.current,value);
+      console.log("Searched Value INSIDE if : "+ JSON.stringify(searchedData));
+      setMenuData(searchedData);
     }
   }
 
@@ -173,6 +190,8 @@ const HomeScreen = () => {
                 fontSize: 18,
               }}
               placeholder="Search"
+              value={search}
+              onChangeText={(value)=>{onClickSearchedData(value)}}
             />
           </View>
         </View>

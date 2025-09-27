@@ -24,9 +24,30 @@ export async function getMenuData() {
 
 // ✅ Fetch few menu items
 export async function getSelectedData(item) {
-  const result = await db.getAllAsync("SELECT * FROM menu where category = ?",
-    [item]
-  );
+  const result = await db.getAllAsync("SELECT * FROM menu where category = ?", [
+    item,
+  ]);
+  return result; // array of rows
+}
+
+// ✅ Fetch menu items on basis of searched items
+export async function getSelectedSearchedData(category, name) { 
+  console.log("getSelectedSearchedData inside");
+  let result = [];
+  if (category == "default") {
+    console.log("getSelectedSearchedData inside if : ",name);
+    result = await db.getAllAsync(
+      "SELECT * FROM menu where name = ?",
+      [name]
+    );
+    console.log("getSelectedSearchedData inside if : ",JSON.stringify(result));
+  } else {
+    console.log("getSelectedSearchedData inside else");
+    result = await db.getAllAsync(
+      "SELECT * FROM menu where category = ? and name = ?",
+      [category, name]
+    );
+  }
   return result; // array of rows
 }
 
