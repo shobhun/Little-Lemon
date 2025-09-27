@@ -29,7 +29,7 @@ The app simulates a food ordering experience for **Little Lemon Restaurant**, sh
 ---
 | Working Video | 
 |---------------|
-| ![certificationApp](src/docs/screens/certificationApp.mp4) |
+| src/docs/screens/certificationApp.mp4 |
 
 ---
 
