@@ -57,4 +57,3 @@ LittleLemonApp/
   ├── screens/            # App screens (Home, Menu, Profile, etc.)
   ├── storage/            # Common place to store the files regarding React Native Storage
   └── utils/              # Single file for Validation.
----
