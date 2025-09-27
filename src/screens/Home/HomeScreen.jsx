@@ -109,7 +109,8 @@ const HomeScreen = () => {
     console.log("onClickCategory : "+JSON.stringify(selectedData));
     console.log("onClickCategory length : "+JSON.stringify(selectedData.length));
     if(selectedData.length === 0){
-      alert("No item available for this category.\n Will try to add new items to this category. \n Please check for other categories");
+      alert("\n Nothing here yet.\n We're adding items to this category soon.\n Try exploring other categories in the meantime!");
+      setMenuData([]);
     }else{
       setMenuData(selectedData);
     }
@@ -187,7 +188,7 @@ const HomeScreen = () => {
                 marginTop: 15,
               }}
             >
-              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("starters")}>
+              <Pressable style={({pressed}) => [{backgroundColor: pressed ? "#ACE1AF" : "#dae3daff" },{ borderRadius: 10 }]} onPress={() => onClickCategory("starters")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -199,7 +200,7 @@ const HomeScreen = () => {
                   Starters
                 </Text>
               </Pressable>
-              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("mains")}>
+              <Pressable style={({pressed}) => [{backgroundColor: pressed ? "#ACE1AF" : "#dae3daff" },{ borderRadius: 10 }]} onPress={() => onClickCategory("mains")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -211,7 +212,7 @@ const HomeScreen = () => {
                   Mains
                 </Text>
               </Pressable>
-              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("desserts")}>
+              <Pressable style={({pressed}) => [{backgroundColor: pressed ? "#ACE1AF" : "#dae3daff" },{ borderRadius: 10 }]} onPress={() => onClickCategory("desserts")}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -223,7 +224,7 @@ const HomeScreen = () => {
                   Desserts
                 </Text>
               </Pressable>
-              <Pressable style={{ backgroundColor: "#dae3daff", borderRadius: 10 }} onPress={() => onClickCategory("drinks")}>
+              <Pressable style={({pressed}) => [{backgroundColor: pressed ? "#ACE1AF" : "#dae3daff" },{ borderRadius: 10 }]} onPress={() => onClickCategory("drinks")}>
                 <Text
                   style={{
                     fontSize: 15,
